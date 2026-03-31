@@ -1,0 +1,9 @@
+/** @type {import('jest').Config} */
+const config = {
+  testEnvironment: 'node',
+  testMatch: ['**/*.test.js'],
+  transform: {},
+  extensionsToTreatAsEsm: [],
+}
+
+module.exports = config

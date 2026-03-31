@@ -6,15 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
+    "@auth/prisma-adapter": "^2.11.1",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
     "i18next": "^26.0.3",
     "next": "16.2.1",
     "next-auth": "^5.0.0-beta.30",
@@ -27,10 +30,16 @@
     "react-i18next": "^17.0.2",
     "sonner": "^2.0.7"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "devDependencies": {
+    "@jest/globals": "^30.3.0",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "jest": "^30.3.0",
+    "jest-environment-node": "^30.3.0",
     "tailwindcss": "^4"
   }
 }
