@@ -13,6 +13,7 @@ model User {
   password  String
   role      String   @default("sdr")
   language  String   @default("fi")
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
