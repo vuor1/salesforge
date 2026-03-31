@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Log in",
+    "loginError": "Invalid email or password"
+  },
+  "nav": {
+    "projects": "Projects",
+    "callScripts": "Call Scripts",
+    "messages": "Message Templates",
+    "peerSupport": "Peer Support",
+    "admin": "Admin"
+  },
+  "projects": {
+    "title": "Projects",
+    "search": "Search by project name or industry",
+    "empty": "No projects",
+    "emptyAction": "Create your first project",
+    "callAngle": "Call angle",
+    "callHistory": "Call history",
+    "stories": "Call stories",
+    "addStory": "Add call story",
+    "noStories": "No call stories yet",
+    "noStoriesAction": "Be the first to add a story"
+  },
+  "callScripts": {
+    "title": "Call Script",
+    "builder": "Call script builder",
+    "teamLibrary": "Team library",
+    "saveToLibrary": "Save to library",
+    "getAiFeedback": "Get AI feedback",
+    "getSuggestions": "Get suggestions"
+  },
+  "messages": {
+    "title": "Message Templates",
+    "channels": {
+      "linkedin": "LinkedIn",
+      "email": "Email",
+      "sms": "SMS/WhatsApp",
+      "call": "Call"
+    },
+    "copyTemplate": "Copy template",
+    "personalize": "Personalize with AI"
+  },
+  "peerSupport": {
+    "title": "Peer Support",
+    "askAdvice": "Ask for advice",
+    "adviceType": {
+      "callScript": "Call script",
+      "message": "Message template",
+      "general": "General advice"
+    },
+    "submit": "Submit request",
+    "answer": "Answer request"
+  },
+  "admin": {
+    "users": "Users",
+    "addUser": "Add user",
+    "roles": {
+      "sdr": "SDR",
+      "ae": "Account Executive",
+      "team_lead": "Team Lead",
+      "admin": "Admin"
+    }
+  }
+}

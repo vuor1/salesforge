@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "Ladataan...",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "add": "Lisää",
+    "search": "Hae",
+    "back": "Takaisin",
+    "next": "Seuraava",
+    "error": "Virhe",
+    "success": "Onnistui",
+    "confirm": "Vahvista",
+    "close": "Sulje",
+    "copy": "Kopioi",
+    "copied": "Kopioitu!"
+  },
+  "auth": {
+    "login": "Kirjaudu sisään",
+    "logout": "Kirjaudu ulos",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "loginButton": "Kirjaudu",
+    "loginError": "Virheellinen sähköposti tai salasana"
+  },
+  "nav": {
+    "projects": "Projektit",
+    "callScripts": "Soittorungot",
+    "messages": "Viestimallit",
+    "peerSupport": "Vertaistuki",
+    "admin": "Hallinta"
+  },
+  "projects": {
+    "title": "Projektit",
+    "search": "Hae projektin nimellä tai toimialalla",
+    "empty": "Ei projekteja",
+    "emptyAction": "Luo ensimmäinen projekti",
+    "callAngle": "Soittokulma",
+    "callHistory": "Soittohistoria",
+    "stories": "Soittotarinat",
+    "addStory": "Lisää soittotarina",
+    "noStories": "Ei soittotarinoita vielä",
+    "noStoriesAction": "Ole ensimmäinen joka lisää tarinan"
+  },
+  "callScripts": {
+    "title": "Soittorunko",
+    "builder": "Soittorungon rakentaja",
+    "teamLibrary": "Tiimin kirjasto",
+    "saveToLibrary": "Tallenna kirjastoon",
+    "getAiFeedback": "Pyydä AI-palautetta",
+    "getSuggestions": "Pyydä ehdotuksia"
+  },
+  "messages": {
+    "title": "Viestimallit",
+    "channels": {
+      "linkedin": "LinkedIn",
+      "email": "Sähköposti",
+      "sms": "SMS/WhatsApp",
+      "call": "Puhelu"
+    },
+    "copyTemplate": "Kopioi malli",
+    "personalize": "Personalisoi AI:lla"
+  },
+  "peerSupport": {
+    "title": "Vertaistuki",
+    "askAdvice": "Pyydä neuvoa",
+    "adviceType": {
+      "callScript": "Soittorunko",
+      "message": "Viestipohja",
+      "general": "Yleinen neuvo"
+    },
+    "submit": "Lähetä pyyntö",
+    "answer": "Vastaa pyyntöön"
+  },
+  "admin": {
+    "users": "Käyttäjät",
+    "addUser": "Lisää käyttäjä",
+    "roles": {
+      "sdr": "SDR",
+      "ae": "Asiakasvastaava",
+      "team_lead": "Tiiminvetäjä",
+      "admin": "Admin"
+    }
+  }
+}
