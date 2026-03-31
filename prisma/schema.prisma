@@ -17,8 +17,62 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts Account[]
-  sessions Session[]
+  accounts            Account[]
+  sessions            Session[]
+  callStories         CallStory[]
+  peerSupportRequests PeerSupportRequest[]
+  peerSupportAnswers  PeerSupportAnswer[]
+}
+
+model ProjectCard {
+  id                 String      @id @default(cuid())
+  name               String      @unique
+  industry           String
+  callAngle          String?
+  callHistorySummary String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  callStories         CallStory[]
+  peerSupportRequests PeerSupportRequest[]
+}
+
+model CallStory {
+  id            String      @id @default(cuid())
+  content       String
+  projectCardId String
+  userId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
+}
+
+model PeerSupportRequest {
+  id            String      @id @default(cuid())
+  projectCardId String
+  userId        String
+  adviceType    String
+  description   String?
+  status        String      @default("pending")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
+  answers       PeerSupportAnswer[]
+}
+
+model PeerSupportAnswer {
+  id                   String             @id @default(cuid())
+  peerSupportRequestId String
+  userId               String
+  content              String
+  createdAt            DateTime           @default(now())
+
+  peerSupportRequest   PeerSupportRequest @relation(fields: [peerSupportRequestId], references: [id], onDelete: Cascade)
+  user                 User               @relation(fields: [userId], references: [id])
 }
 
 model Account {
