@@ -7,21 +7,30 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      String   @default("sdr")
-  language  String   @default("fi")
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  password      String
+  role          String   @default("sdr")
+  slackUserId   String?  // Tarvitaan Slack-notifikaatioihin (Story 3.9, 3.10)
+  language      String   @default("fi")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  accounts            Account[]
-  sessions            Session[]
-  callStories         CallStory[]
-  peerSupportRequests PeerSupportRequest[]
-  peerSupportAnswers  PeerSupportAnswer[]
+  accounts                 Account[]
+  sessions                 Session[]
+  callStories              CallStory[]
+  callScripts              CallScript[]
+  experiences              Experience[]
+  reactions                Reaction[]
+  projectCardViews         UserProjectView[]
+  peerSupportRequests      PeerSupportRequest[]
+  peerSupportAnswers       PeerSupportAnswer[]
+  growthClubTopicRequests  GrowthClubTopicRequest[]
+  bookingTips              BookingTip[]
+  bookingTipLikes          BookingTipLike[]
+  userProjects             UserProject[]
 }
 
 model ProjectCard {
@@ -34,7 +43,25 @@ model ProjectCard {
   updatedAt          DateTime    @updatedAt
 
   callStories         CallStory[]
+  callScripts         CallScript[]
+  experiences         Experience[]
+  bookingTips         BookingTip[]
+  messageTemplates    MessageTemplate[]
   peerSupportRequests PeerSupportRequest[]
+  userProjects        UserProject[]
+  userViews           UserProjectView[]
+}
+
+model UserProject {
+  id            String      @id @default(cuid())
+  userId        String
+  projectCardId String
+  createdAt     DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectCardId])
 }
 
 model CallStory {
@@ -47,6 +74,24 @@ model CallStory {
 
   projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
   user          User        @relation(fields: [userId], references: [id])
+}
+
+model CallScript {
+  id            String      @id @default(cuid())
+  projectCardId String
+  userId        String
+  title         String?
+  opening       String      @default("")
+  objections    String      @default("")
+  closing       String      @default("")
+  status        String      @default("draft")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  projectCard   ProjectCard  @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [userId], references: [id])
+  experiences   Experience[]
+  reactions     Reaction[]
 }
 
 model PeerSupportRequest {
@@ -73,6 +118,66 @@ model PeerSupportAnswer {
 
   peerSupportRequest   PeerSupportRequest @relation(fields: [peerSupportRequestId], references: [id], onDelete: Cascade)
   user                 User               @relation(fields: [userId], references: [id])
+}
+
+model BookingTip {
+  id            String   @id @default(cuid())
+  type          String
+  content       String
+  context       String
+  projectCardId String
+  userId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  projectCard ProjectCard      @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id])
+  likedBy     BookingTipLike[]
+}
+
+model BookingTipLike {
+  id        String   @id @default(cuid())
+  tipId     String
+  userId    String
+  createdAt DateTime @default(now())
+
+  tip  BookingTip @relation(fields: [tipId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id])
+
+  @@unique([tipId, userId])
+}
+
+model GrowthClubTopicRequest {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model GrowthClubSession {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  content     String
+  sessionDate DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MessageTemplate {
+  id            String      @id @default(cuid())
+  projectCardId String
+  channel       String
+  title         String
+  body          String
+  language      String      @default("fi")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
 }
 
 model Account {
@@ -109,4 +214,47 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Kokemus = "Käytin tätä" -kirjaus soiton jälkeen (Story 3.7)
+model Experience {
+  id            String      @id @default(cuid())
+  callScriptId  String
+  projectCardId String
+  authorId      String
+  content       String
+  score         Int?        // 1–5 (valinnainen)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  callScript    CallScript  @relation(fields: [callScriptId], references: [id], onDelete: Cascade)
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+  author        User        @relation(fields: [authorId], references: [id])
+}
+
+// Reaktio soittorunkoon (Story 3.9)
+model Reaction {
+  id           String     @id @default(cuid())
+  callScriptId String
+  userId       String
+  emoji        String     @default("👍")
+  createdAt    DateTime   @default(now())
+
+  callScript   CallScript @relation(fields: [callScriptId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@unique([callScriptId, userId]) // Yksi reaktio per käyttäjä per runko
+}
+
+// Seuraa projektikortin avauksia JÄLKEEN-muistutusta varten (Story 3.10)
+model UserProjectView {
+  id            String      @id @default(cuid())
+  userId        String
+  projectCardId String
+  viewedAt      DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id])
+  projectCard   ProjectCard @relation(fields: [projectCardId], references: [id], onDelete: Cascade)
+
+  @@index([userId, viewedAt]) // Cron-query: hae kaikki käyttäjän tänään avatut projektit
 }

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { requireAuth } from '@/lib/api-auth'
+import { requireAuth, requireRole } from '@/lib/api-auth'
 
 export async function GET(request) {
   const { response } = await requireAuth()
@@ -33,4 +33,43 @@ export async function GET(request) {
   }))
 
   return Response.json({ data })
+}
+
+export async function POST(request) {
+  const { session, response } = await requireRole('admin', 'ae')
+  if (response) return response
+
+  const { name, industry, callAngle, callHistorySummary } = await request.json()
+
+  if (!name?.trim()) {
+    return Response.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Projektin nimi on pakollinen' } },
+      { status: 400 }
+    )
+  }
+  if (!industry?.trim()) {
+    return Response.json(
+      { error: { code: 'VALIDATION_ERROR', message: 'Toimiala on pakollinen' } },
+      { status: 400 }
+    )
+  }
+
+  const existing = await prisma.projectCard.findUnique({ where: { name: name.trim() } })
+  if (existing) {
+    return Response.json(
+      { error: { code: 'CONFLICT', message: 'Projekti tällä nimellä on jo olemassa' } },
+      { status: 409 }
+    )
+  }
+
+  const project = await prisma.projectCard.create({
+    data: {
+      name: name.trim(),
+      industry: industry.trim(),
+      callAngle: callAngle?.trim() || null,
+      callHistorySummary: callHistorySummary?.trim() || null,
+    },
+  })
+
+  return Response.json({ data: project }, { status: 201 })
 }

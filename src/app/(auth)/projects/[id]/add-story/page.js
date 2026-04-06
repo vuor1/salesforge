@@ -37,18 +37,9 @@ export default function AddStoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3">
-          <Link href={`/projects/${id}`} className="text-gray-400 hover:text-gray-600 text-sm">
-            ← Takaisin
-          </Link>
-          <span className="text-gray-300">/</span>
-          <h1 className="text-lg font-semibold text-gray-900">Lisää soittotarina</h1>
-        </div>
-      </header>
-
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-[#f5f4f0]">
+      <main className="max-w-2xl mx-auto px-6 py-10">
+        <h1 className="text-[18px] font-semibold text-gray-900 mb-6">Lisää soittotarina</h1>
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-4">
           <div>
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">

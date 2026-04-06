@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { requireAuth } from '@/lib/api-auth'
+import { requireAuth, requireRole } from '@/lib/api-auth'
 
 export async function GET(request, { params }) {
   const { response } = await requireAuth()
@@ -28,4 +28,31 @@ export async function GET(request, { params }) {
   }
 
   return Response.json({ data: project })
+}
+
+export async function PATCH(request, { params }) {
+  const { response } = await requireRole('admin', 'ae')
+  if (response) return response
+
+  const { id } = await params
+  const { industry, callAngle, callHistorySummary } = await request.json()
+
+  const project = await prisma.projectCard.findUnique({ where: { id } })
+  if (!project) {
+    return Response.json(
+      { error: { code: 'NOT_FOUND', message: 'Project not found' } },
+      { status: 404 }
+    )
+  }
+
+  const updated = await prisma.projectCard.update({
+    where: { id },
+    data: {
+      ...(industry !== undefined && { industry: industry.trim() }),
+      ...(callAngle !== undefined && { callAngle: callAngle?.trim() || null }),
+      ...(callHistorySummary !== undefined && { callHistorySummary: callHistorySummary?.trim() || null }),
+    },
+  })
+
+  return Response.json({ data: updated })
 }
