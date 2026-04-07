@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import PeerSupportSection from '@/components/PeerSupportSection'
 import ScriptRow from '@/components/features/ScriptRow'
 import AIPanel from '@/components/features/AIPanel'
+import { saveRecentProject } from '@/components/features/InstantSearchField'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -526,6 +527,10 @@ function industryColor(industry) {
 
 export default function ProjectPageClient({ project, initialTips, initialStories, initialTemplates, initialScripts, currentUserId, canManage }) {
   const [activeTab, setActiveTab] = useState('vinkit')
+
+  useEffect(() => {
+    saveRecentProject({ id: project.id, name: project.name, industry: project.industry })
+  }, [project.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="space-y-6">

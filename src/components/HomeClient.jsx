@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import InstantSearchField from '@/components/features/InstantSearchField'
 
 const INDUSTRY_COLORS = {
   IT: 'bg-indigo-100 text-indigo-700',
@@ -158,6 +159,12 @@ export default function HomeClient({ myProjects, otherProjects, latestSession, c
 
   return (
     <div className="space-y-10">
+
+      {/* Instant search */}
+      <InstantSearchField
+        placeholder="Hae projekti nimellä tai toimialalla..."
+        className="max-w-lg"
+      />
 
       {/* Omat projektit */}
       <section>
