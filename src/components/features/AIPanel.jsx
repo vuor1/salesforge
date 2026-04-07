@@ -43,7 +43,7 @@ function renderBullets(text) {
   }).filter(Boolean)
 }
 
-export default function AIPanel({ projectId }) {
+export default function AIPanel({ projectId, embedded = false }) {
   const [open, setOpen] = useState(() => {
     if (typeof window === 'undefined') return true
     try {
@@ -113,6 +113,59 @@ export default function AIPanel({ projectId }) {
       setAsking(false)
       setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
     }
+  }
+
+  // When embedded in sidebar, render the body directly without the card wrapper/header
+  if (embedded) {
+    return (
+      <div className="space-y-4 pt-1" aria-live="polite">
+        {error ? (
+          <p className="text-[12px] text-amber-600 bg-amber-50 rounded-xl px-3 py-2.5">{error}</p>
+        ) : loadingInitial ? (
+          <Skeleton />
+        ) : synthesis ? (
+          <ul className="space-y-1">{renderBullets(synthesis.text)}</ul>
+        ) : null}
+
+        {conversation.length > 0 && (
+          <div className="space-y-3 border-t border-indigo-100 pt-3" aria-live="polite">
+            {conversation.map((msg, i) => (
+              <div key={i} className={msg.role === 'user' ? 'text-right' : ''}>
+                {msg.role === 'user' ? (
+                  <span className="inline-block text-[11px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-xl max-w-[90%] text-left">
+                    {msg.text}
+                  </span>
+                ) : (
+                  <ul className="space-y-1 text-left">{renderBullets(msg.text)}</ul>
+                )}
+              </div>
+            ))}
+            {asking && <p className="text-[11px] text-indigo-400 animate-pulse">Sparraaja miettii…</p>}
+            <div ref={bottomRef} />
+          </div>
+        )}
+
+        <form onSubmit={handleAsk} className="flex gap-1.5">
+          <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Kysy sparraajalta…"
+            disabled={asking || loadingInitial}
+            className="flex-1 text-[12px] px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50 focus:outline-none focus:border-indigo-400 disabled:opacity-50"
+            aria-label="Kysy AI-sparraajalta"
+          />
+          <button
+            type="submit"
+            disabled={!question.trim() || asking || loadingInitial}
+            className="text-[12px] px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 transition-colors shrink-0"
+            aria-label="Lähetä"
+          >
+            ↵
+          </button>
+        </form>
+      </div>
+    )
   }
 
   return (

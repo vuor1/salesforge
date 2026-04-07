@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import PeerSupportSection from '@/components/PeerSupportSection'
 import ScriptRow from '@/components/features/ScriptRow'
-import AIPanel from '@/components/features/AIPanel'
 import { saveRecentProject } from '@/components/features/InstantSearchField'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -555,9 +554,6 @@ export default function ProjectPageClient({ project, initialTips, initialStories
           ← Projektit
         </Link>
       </div>
-
-      {/* AI sparraaja */}
-      <AIPanel projectId={project.id} />
 
       {/* Tab navigation */}
       <div className="flex gap-1 bg-white rounded-2xl p-1 shadow-sm">

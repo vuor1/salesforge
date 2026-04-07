@@ -35,15 +35,13 @@ export default async function ProjectsPage() {
   const canManage = ['admin', 'ae'].includes(session?.user?.role)
 
   return (
-    <div className="min-h-screen bg-[#f5f4f0]">
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        <HomeClient
-          myProjects={myProjects}
-          otherProjects={otherProjects}
-          latestSession={latestSession}
-          canManage={canManage}
-        />
-      </main>
+    <div className="max-w-4xl mx-auto px-6 py-8">
+      <HomeClient
+        myProjects={myProjects}
+        otherProjects={otherProjects}
+        latestSession={latestSession}
+        canManage={canManage}
+      />
     </div>
   )
 }

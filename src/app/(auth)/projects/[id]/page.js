@@ -70,18 +70,16 @@ export default async function ProjectCardPage({ params }) {
     .sort((a, b) => b.reactionCount - a.reactionCount)
 
   return (
-    <div className="min-h-screen bg-[#f5f4f0]">
-      <main className="max-w-4xl mx-auto px-6 py-10">
-        <ProjectPageClient
-          project={project}
-          initialTips={initialTips}
-          initialStories={stories}
-          initialTemplates={templates}
-          initialScripts={initialScripts}
-          currentUserId={currentUserId}
-          canManage={canManage}
-        />
-      </main>
+    <div className="max-w-2xl mx-auto px-5 py-8">
+      <ProjectPageClient
+        project={project}
+        initialTips={initialTips}
+        initialStories={stories}
+        initialTemplates={templates}
+        initialScripts={initialScripts}
+        currentUserId={currentUserId}
+        canManage={canManage}
+      />
     </div>
   )
 }
