@@ -90,6 +90,52 @@ function ExperienceInline({ script, projectId, currentUserId, onSaved }) {
   )
 }
 
+function ReactionPill({ scriptId, initialCount, initialReacted }) {
+  const [count, setCount] = useState(initialCount)
+  const [reacted, setReacted] = useState(initialReacted)
+  const [loading, setLoading] = useState(false)
+  const [pulse, setPulse] = useState(false)
+
+  async function handleClick() {
+    if (loading) return
+    // Optimistic update
+    const wasReacted = reacted
+    setReacted(!wasReacted)
+    setCount((c) => wasReacted ? c - 1 : c + 1)
+    if (!wasReacted) { setPulse(true); setTimeout(() => setPulse(false), 400) }
+
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/scripts/${scriptId}/reactions`, { method: 'POST' })
+      if (!res.ok) throw new Error('failed')
+      const { data } = await res.json()
+      setCount(data.count)
+      setReacted(data.reacted)
+    } catch {
+      // Rollback on error
+      setReacted(wasReacted)
+      setCount((c) => wasReacted ? c + 1 : c - 1)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      title={reacted ? 'Poista reaktio' : 'Reagoi'}
+      className={`flex items-center gap-1 text-[12px] px-2.5 py-1 rounded-full transition-all
+        ${reacted
+          ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+          : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'}
+        ${pulse ? 'scale-110' : 'scale-100'}
+      `}
+    >
+      👍 {count > 0 && <span>{count}</span>}
+    </button>
+  )
+}
+
 export default function ScriptRow({ script, projectId, currentUserId, isHighlighted }) {
   const [expanded, setExpanded] = useState(false)
   const [showExperience, setShowExperience] = useState(false)
@@ -163,7 +209,7 @@ export default function ScriptRow({ script, projectId, currentUserId, isHighligh
         </button>
 
         {/* Meta */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {experiences.length > 0 && (
             <span className="text-[11px] text-gray-400">
               {experiences.length} kokem.{avgScore ? ` · ⭐ ${avgScore}` : ''}
@@ -171,7 +217,12 @@ export default function ScriptRow({ script, projectId, currentUserId, isHighligh
           )}
           <span className="text-[11px] text-gray-300">{formatDate(script.createdAt)}</span>
 
-          {/* Action buttons */}
+          <ReactionPill
+            scriptId={script.id}
+            initialCount={script.reactionCount ?? 0}
+            initialReacted={(script.reactions ?? []).some((r) => r.userId === currentUserId)}
+          />
+
           <button
             onClick={handleCopy}
             title="Kopioi runko"
