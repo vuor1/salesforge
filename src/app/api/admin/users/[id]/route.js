@@ -7,7 +7,7 @@ export async function PATCH(request, { params }) {
 
   const { id } = await params
   const body = await request.json()
-  const { role, isActive } = body
+  const { role, isActive, slackUserId } = body
 
   const user = await prisma.user.findUnique({ where: { id } })
   if (!user) {
@@ -29,6 +29,7 @@ export async function PATCH(request, { params }) {
   const updateData = {}
   if (role !== undefined && validRoles.includes(role)) updateData.role = role
   if (isActive !== undefined && typeof isActive === 'boolean') updateData.isActive = isActive
+  if (slackUserId !== undefined) updateData.slackUserId = slackUserId ?? null
 
   const updated = await prisma.user.update({
     where: { id },
@@ -40,6 +41,7 @@ export async function PATCH(request, { params }) {
       role: true,
       isActive: true,
       language: true,
+      slackUserId: true,
       createdAt: true,
     },
   })

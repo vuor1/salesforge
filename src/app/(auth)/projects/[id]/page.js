@@ -7,6 +7,13 @@ export default async function ProjectCardPage({ params }) {
   const { id } = await params
   const session = await auth()
 
+  // Track project card view for Slack JÄLKEEN-muistutus (Story 3.10)
+  if (session?.user?.id) {
+    prisma.userProjectView.create({
+      data: { userId: session.user.id, projectCardId: id },
+    }).catch(() => {}) // fire-and-forget, never block page load
+  }
+
   const [project, tips, stories, templates, scripts, experiences] = await Promise.all([
     prisma.projectCard.findUnique({ where: { id } }),
     prisma.bookingTip.findMany({

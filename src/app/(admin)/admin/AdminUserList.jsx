@@ -11,6 +11,43 @@ const ROLES = [
   { value: 'admin', label: 'Admin' },
 ]
 
+function SlackIdCell({ user, onSave }) {
+  const [editing, setEditing] = useState(false)
+  const [value, setValue] = useState(user.slackUserId ?? '')
+
+  function handleBlur() {
+    setEditing(false)
+    const trimmed = value.trim() || null
+    if (trimmed !== (user.slackUserId ?? null)) {
+      onSave(trimmed)
+    }
+  }
+
+  if (editing) {
+    return (
+      <input
+        autoFocus
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={handleBlur}
+        onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur() }}
+        className="w-28 rounded border border-blue-400 px-1.5 py-0.5 text-xs focus:outline-none"
+        placeholder="U0123ABCD"
+      />
+    )
+  }
+
+  return (
+    <button
+      onClick={() => setEditing(true)}
+      className="text-xs text-gray-400 hover:text-gray-700 font-mono"
+      title="Klikkaa muokataksesi Slack User ID:tä"
+    >
+      {user.slackUserId ?? '—'}
+    </button>
+  )
+}
+
 export default function AdminUserList({ users: initialUsers, currentUserId }) {
   const router = useRouter()
   const [users, setUsers] = useState(initialUsers)
@@ -149,6 +186,7 @@ export default function AdminUserList({ users: initialUsers, currentUserId }) {
               <th className="text-left px-4 py-2 font-medium text-gray-700">Nimi</th>
               <th className="text-left px-4 py-2 font-medium text-gray-700">Sähköposti</th>
               <th className="text-left px-4 py-2 font-medium text-gray-700">Rooli</th>
+              <th className="text-left px-4 py-2 font-medium text-gray-700">Slack ID</th>
               <th className="text-left px-4 py-2 font-medium text-gray-700">Status</th>
               <th className="text-left px-4 py-2 font-medium text-gray-700">Toiminnot</th>
             </tr>
@@ -169,6 +207,9 @@ export default function AdminUserList({ users: initialUsers, currentUserId }) {
                       <option key={r.value} value={r.value}>{r.label}</option>
                     ))}
                   </select>
+                </td>
+                <td className="px-4 py-2">
+                  <SlackIdCell user={user} onSave={(val) => updateUser(user.id, { slackUserId: val })} />
                 </td>
                 <td className="px-4 py-2">
                   <span

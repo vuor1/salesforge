@@ -14,6 +14,7 @@ export default async function AdminPage() {
       role: true,
       isActive: true,
       language: true,
+      slackUserId: true,
       createdAt: true,
     },
     orderBy: { createdAt: 'asc' },
