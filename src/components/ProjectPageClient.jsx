@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import PeerSupportSection from '@/components/PeerSupportSection'
+import ScriptRow from '@/components/features/ScriptRow'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -292,16 +293,47 @@ function VinkitTab({ projectId, initialTips, initialStories, currentUserId, canM
 
 // ── Soittorunko tab ───────────────────────────────────────────────────────────
 
-function SoittorunkoTab({ projectId }) {
+function SoittorunkoTab({ projectId, initialScripts, currentUserId }) {
+  const [scripts, setScripts] = useState(initialScripts ?? [])
+
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm text-center space-y-4">
-      <p className="text-[14px] text-gray-500">Rakenna projektille soittorunko tekoälyavusteisesti</p>
-      <Link
-        href={`/projects/${projectId}/call-script`}
-        className="inline-block text-[13px] px-5 py-2.5 rounded-full bg-gray-900 text-white hover:bg-gray-700"
-      >
-        Avaa soittorungon rakentaja
-      </Link>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] text-gray-500">
+          {scripts.length === 0 ? 'Ei vielä tiimin soittorunkoja' : `${scripts.length} tiimin soittorunkoa`}
+        </p>
+        <Link
+          href={`/projects/${projectId}/call-script`}
+          className="text-[13px] px-4 py-2 rounded-full bg-gray-900 text-white hover:bg-gray-700"
+        >
+          + Luo oma runko
+        </Link>
+      </div>
+
+      {scripts.length === 0 ? (
+        <div className="bg-white rounded-2xl p-10 text-center shadow-sm space-y-3">
+          <p className="text-[15px] text-gray-400">Tällä projektilla ei ole vielä soittorunkoja</p>
+          <p className="text-[13px] text-gray-300">Ole ensimmäinen — luo runko ja jaa se tiimille!</p>
+          <Link
+            href={`/projects/${projectId}/call-script`}
+            className="inline-block mt-2 text-[13px] px-5 py-2.5 rounded-full bg-gray-900 text-white hover:bg-gray-700"
+          >
+            Luo soittorunko
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {scripts.map((script, i) => (
+            <ScriptRow
+              key={script.id}
+              script={script}
+              projectId={projectId}
+              currentUserId={currentUserId}
+              isHighlighted={i === 0 && script.reactionCount > 0}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -491,7 +523,7 @@ function industryColor(industry) {
   return 'bg-gray-100 text-gray-600'
 }
 
-export default function ProjectPageClient({ project, initialTips, initialStories, initialTemplates, currentUserId, canManage }) {
+export default function ProjectPageClient({ project, initialTips, initialStories, initialTemplates, initialScripts, currentUserId, canManage }) {
   const [activeTab, setActiveTab] = useState('vinkit')
 
   return (
@@ -544,7 +576,11 @@ export default function ProjectPageClient({ project, initialTips, initialStories
         />
       )}
       {activeTab === 'soittorunko' && (
-        <SoittorunkoTab projectId={project.id} />
+        <SoittorunkoTab
+          projectId={project.id}
+          initialScripts={initialScripts}
+          currentUserId={currentUserId}
+        />
       )}
       {activeTab === 'viestimallit' && (
         <ViestimalliTab
